@@ -118,6 +118,7 @@
                         '#include<iostream>',
                         'using namespace std;',
                         'int main() {',
+                        '\tint t;',
                         '\tcout<<"Hello World!!!";',
                         '}'
                     ].join('\n'),
@@ -141,7 +142,7 @@
                         'editor.inactiveSelectionBackground': '#88000015'
                     }
                 });
-                monaco.editor.setTheme('myTheme');
+                // monaco.editor.setTheme('myTheme');
                 editor.addCommand(monaco.KeyCode.CapsLock, function() {
                     onRunMeClick();
                 });

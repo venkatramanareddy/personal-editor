@@ -10,7 +10,8 @@ const exec = util.promisify(require('child_process').exec);
 const uuid = require('uuid/v4')
 
 var inUse = false;
-const cleanUpTime = 300000;
+const cleanUpEnabled = false;
+const cleanUpTime = 3600000; // 1 hour
 const compile_directory = "temp_compile";
 
 app.use(bodyParser.json());
@@ -41,7 +42,7 @@ app.post('/submitCode', (req,res) => {
             inUse = false;
         }
         else{
-            const { stdout, stderr } = await exec(`g++ ${compile_directory}/${code_id}.cpp -o ${compile_directory}/${code_id}.out --std=c++17\
+            const { stdout, stderr } = await exec(`g++ ${compile_directory}/${code_id}.cpp -o ${compile_directory}/${code_id}.out --std=c++14\
             && echo "${req.body.input}" | ./${compile_directory}/${code_id}.out`).catch((err) => {
                 if(err != undefined){
                     console.log('am I right now?')
@@ -75,7 +76,7 @@ app.post('/submitCode', (req,res) => {
 })
 
 async function cleanUpTempFolder(folder){
-    if(!inUse){
+    if(!inUse && cleanUpEnabled){
         console.log('Directory clean up initiated for dir ' + folder);
         const {stdout, stderr} = await exec(`rm -rvf ${folder}/*.{cpp,out}`)
         console.log('stdout:', stdout);
